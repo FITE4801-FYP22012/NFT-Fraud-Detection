@@ -58,7 +58,7 @@ jobs:
       - name: Deploy CDK stack to Staging
         uses: sofianhamiti/composite-action-cdk-deploy@main
         with:
-          cdk_version: 2.41.0
+          cdk_version: 2.51.0
           folder: src/model_deploy/stack
           aws_account: ${{secrets.ACCOUNT_ID}}
           aws_region: ${{secrets.AWS_REGION}}
@@ -121,7 +121,7 @@ jobs:
       - name: Deploy CDK stack to Production
         uses: sofianhamiti/composite-action-cdk-deploy@main
         with:
-          cdk_version: 2.41.0
+          cdk_version: 2.51.1
           folder: src/model_deploy/stack
           aws_account: ${{secrets.ACCOUNT_ID}}
           aws_region: ${{secrets.AWS_REGION}}

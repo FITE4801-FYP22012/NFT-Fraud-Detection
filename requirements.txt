@@ -1,6 +1,6 @@
 pyyaml
 boto3
-mlflow==1.28.0
+mlflow==2.2.2
 sagemaker==2.105.0
-aws-cdk-lib==2.42.0
+aws-cdk-lib==2.51.1
 constructs==10.1.96

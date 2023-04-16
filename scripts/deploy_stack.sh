@@ -5,7 +5,7 @@
 # curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
 # sudo yum install -y nodejs
 
-#sudo npm install -g aws-cdk@2.41.0
+#sudo npm install -g aws-cdk@2.51.1
 
 
 # SET STAGE ENVIRONMENT VARIABLE TO USE IN THE CDK STACK

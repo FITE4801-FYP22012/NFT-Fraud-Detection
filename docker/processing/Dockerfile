@@ -9,5 +9,6 @@ RUN apt-get update \
 
 # install python dependencies
 RUN pip install --no-cache --upgrade \
-    scikit-learn==1.1.2
+    scikit-learn \ 
+    pandas pyarrow dynamodb_json
 
