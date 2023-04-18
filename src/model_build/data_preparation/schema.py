@@ -1,0 +1,110 @@
+STRING_COLS = [
+    "pk",
+    "contract_address",
+    "contract_schema",
+    "contract_ticker_symbol",
+    "display_name",
+    "description",
+    "banner_image_url",
+    "collection_image_url",
+    # "display_state",
+    "display_state_reason",
+    "external.discord",
+    "external.instagram",
+    "external.telegram",
+    "external.twitter",
+    "external.os_slug",
+    "external.urls",
+    "flags.os_safelist_state",
+]
+FLOAT_COLS = ["display_stats.floor_price",
+    "display_stats.one_day_volume",
+    "display_stats.seven_day_volume",
+    "display_stats.thirty_day_volume",
+    "display_stats.total_volume",
+]
+
+INT_COLS = ["display_stats.supply", "display_stats.holders"]
+
+BOOL_COLS = [
+    # "flags.did_self_destruct",
+    "flags.bytecode_threshold",
+    "flags.approval_threshold",
+    "flags.os_hidden",
+    "flags.is_whitelisted_proxy",
+    "flags.functions_threshold",
+    # "flags.os_safelist_state", # 5 categories
+    "flags.code_verified",
+    "is_nsfw", # TODO: duplicate?
+    "flags.os_is_nsfw", 
+    "flags.dttd_suspicious",
+    "flags.dttd_whitelist",
+    "flags.dttd_blacklist",
+    "flags.os_verified",
+]
+
+{
+    # targets
+    "display_state": str,
+    "display_state_reason": str,
+    # Index
+    "pk": str,
+    "contract_address": str,
+    "dt_updated": str,
+    "dt_updated.opensea": str,
+    "dt_updated.dttd": str,
+    # Text
+    "name": str,
+    "display_name": str,
+    "description": str,
+    "contract_ticker_symbol": str,
+    "external.os_slug": str,
+    "contract_name": str,
+    # image
+    "banner_image_url": str,
+    "collection_image_url": str,
+    # Social
+    "external.telegram": str,
+    "external.twitter": str,
+    "external.urls": str,
+    "external.discord": str,
+    "external.instagram": str,
+    "external.os_medium": str,
+    "external.os_discord": str,
+    "external.os_wiki": str,
+    "external.os_telegram": str,
+    "external.os_instagram": str,
+    "external.os_twitter": str,
+    "external.os_url": str,
+    # Numeric
+    "display_stats.seven_day_volume": str,
+    "display_stats.thirty_day_volume": str,
+    "display_stats.total_volume": str,
+    "display_stats.holders": str,
+    "display_stats.one_day_volume": str,
+    "display_stats.floor_price": str,
+    "display_stats.supply": str,
+    "total_supply": str,
+    "volume.opensea.seven_day_volume": str,
+    "volume.opensea.thirty_day_volume": str,
+    "volume.opensea.total_volume": str,
+    "volume.opensea.one_day_volume": str,
+    "floor_price.opensea": str,
+    # Categoric
+    "contract_schema": str,
+    # Flags
+    "is_nsfw": str,
+    "flags.did_self_destruct": str,
+    "flags.bytecode_threshold": str,
+    "flags.approval_threshold": str,
+    "flags.os_hidden": str,
+    "flags.is_whitelisted_proxy": str,
+    "flags.functions_threshold": str,
+    "flags.os_safelist_state": str,
+    "flags.code_verified": str,
+    "flags.os_is_nsfw": str,
+    "flags.dttd_suspicious": str,
+    "flags.dttd_whitelist": str,
+    "flags.dttd_blacklist": str,
+    "flags.os_verified": str,
+}

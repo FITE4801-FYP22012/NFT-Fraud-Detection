@@ -4,10 +4,10 @@ import joblib
 import logging
 import argparse
 import pandas as pd
-from sklearn import ensemble
-from sklearn.model_selection import train_test_split
 import mlflow
 import mlflow.sklearn
+import glob
+from pycaret.classification import *
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,52 +15,48 @@ logging.basicConfig(level=logging.INFO)
 def train(args):
 
     logging.info("READING DATA")
-    df = pd.read_csv(f"{args.input_folder}/housing.csv")
-    hyperparameters = json.loads(args.hyperparameters)
+    parquet_files = glob.glob(os.path.join(args.input_folder, '*.parquet'))
+    if not parquet_files:
+        raise Exception("No parquet files found in the input_data_path")
+ 
+    # Read the input parquet file
+    # Assume only one parquet file in the input folder
+    df = pd.read_parquet(parquet_files[0])
 
-    logging.info("BUILDING TRAINING AND TESTING DATASET")
-    X_train, X_test, y_train, y_test = train_test_split(
-        df.loc[:, df.columns != hyperparameters["target"]],
-        df[hyperparameters["target"]],
-        test_size=0.2,
-        random_state=42,
-    )
+    hyperparameters = json.loads(args.hyperparameters)
 
     # SET REMOTE MLFLOW SERVER
     mlflow.set_tracking_uri(hyperparameters["tracking_uri"])
-    mlflow.set_experiment(hyperparameters["experiment_name"])
+    # mlflow.set_experiment(hyperparameters["experiment_name"])
 
-    with mlflow.start_run():
-        # LOG PARAMETERS
-        params = {"n-estimators": hyperparameters["n_estimators"]}
-        mlflow.log_params(params)
+    exp = setup(
+        data=df,
+        train_size=hyperparameters['train_size'],
+        target=hyperparameters['target'],
+        session_id=123,
+        fold_shuffle=True,
+        imputation_type="iterative",
+        remove_multicollinearity=hyperparameters['remove_multicollinearity'],
+        log_experiment=True,
+        experiment_name=hyperparameters["experiment_name"],
+    )
 
-        # TRAIN
-        logging.info("TRAINING MODEL")
-        model = ensemble.RandomForestRegressor(
-            n_estimators=hyperparameters["n_estimators"], random_state=42
+    if hyperparameters["save_model_in_registry"]:
+        experiment = mlflow.get_experiment_by_name(hyperparameters["experiment_name"])
+        runs = mlflow.search_runs(experiment.experiment_id)
+        best_run = runs.loc[runs["metrics.AUC"].idxmax()]
+        # Get the run ID and artifact URI of the best run
+        # best_run_id = best_run.run_id
+        # best_run_name = best_run["tags.mlflow.runName"].replace(" ", "_")
+        artifact_uri = best_run.artifact_uri
+        
+        # Define the path to the model artifact (logged as 'model' in the example)
+        model_path = os.path.join(artifact_uri.replace(r"file://", ""), "model").lstrip("/")
+        mlflow.register_model(
+            model_uri=model_path,
+            name=hyperparameters['model_name'],
+            tags=dict(best_run),
         )
-        model.fit(X_train, y_train)
-
-        # EVALUATE ACCURACY
-        logging.info("EVALUATING MODEL")
-        accuracy = model.score(X_test, y_test)
-        logging.info(f"Accuracy: {accuracy:.2f}")
-        mlflow.log_metric(f"Accuracy", accuracy)
-
-        # SAVE MODEL
-        if hyperparameters["save_model_in_registry"]:
-            # YOU CAN ADD A METRIC CONDITION HERE BEFORE REGISTERING THE MODEL
-            logging.info("REGISTERING MODEL IN MLFLOW REGISTRY")
-            # Make sure the IAM role has access to the MLflow artifact bucket
-            mlflow.sklearn.log_model(
-                sk_model=model,
-                artifact_path="model",
-                registered_model_name=hyperparameters["model_name"],
-            )
-        else:
-            logging.info("LOGGING MODEL IN EXPERIMENT RUN")
-            mlflow.sklearn.log_model(model, "model")
 
 
 if __name__ == "__main__":

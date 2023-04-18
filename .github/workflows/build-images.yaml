@@ -20,9 +20,9 @@ jobs:
       matrix:
         include:
           - folder: docker/processing/
-            repository_name: housing-processing
+            repository_name: fraud-detection-processing
           - folder: docker/training/
-            repository_name: housing-training
+            repository_name: fraud-detection-training
 
     steps:
       - name: Checkout

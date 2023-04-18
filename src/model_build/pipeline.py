@@ -13,9 +13,17 @@ def get_pipeline(iam_role, cfg):
         name="PrepareData",
         processor=processor,
         code=cfg["processing"]["entry_point"],
+        inputs=[
+            sagemaker.processing.ProcessingInput(
+                source=cfg["processing"]["s3_input_data_uri"],
+                destination=cfg["processing"]["parameters"]["input_folder"],
+            )
+        ],
         outputs=[
             sagemaker.processing.ProcessingOutput(
-                source=cfg["processing"]["parameters"]["output_folder"]
+                name="output-1",
+                source=cfg["processing"]["parameters"]["output_folder"],
+                destination=cfg["processing"]["s3_output_data_uri"],
             )
         ],
     )
@@ -25,7 +33,7 @@ def get_pipeline(iam_role, cfg):
         s3_data=step_process.properties.ProcessingOutputConfig.Outputs[
             "output-1"
         ].S3Output.S3Uri,
-        content_type="text/csv",
+        content_type="application/x-parquet",
     )
 
     # TRAINING STEP
