@@ -1,3 +1,11 @@
-# amazon-sagemaker-github-actions-mlflow
+# FITE4801 - Non-Fungible Token Fraud Detection System
 
-[5 Simple Steps to MLOps with GitHub Actions, MLflow, and SageMaker Pipelines](https://sofian-hamiti.medium.com/5-simple-steps-to-mlops-with-github-actions-mlflow-and-sagemaker-pipelines-19abf951a70)
+This repository contains the code for the FITE4801 project.
+
+## Installation
+
+## Deployment
+
+```bash
+. scripts/deploy_stack.sh
+```
